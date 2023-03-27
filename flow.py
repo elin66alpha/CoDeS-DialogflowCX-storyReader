@@ -89,38 +89,38 @@ if __name__ == "__main__":
 
     # playsound("temp.mp3")
 
-    text = 'this book'
-    print('‣ input: ',text)
-    full_response = ag.send_utterance(text)
-    # myobj = gTTS(text=full_response, lang=language, slow=False)
+    # text = 'this book'
+    # print('‣ input: ',text)
+    # full_response = ag.send_utterance(text)
+    # # myobj = gTTS(text=full_response, lang=language, slow=False)
 
-    # myobj.save("temp.mp3")
+    # # myobj.save("temp.mp3")
 
-    # playsound("temp.mp3")
+    # # playsound("temp.mp3")
 
-    text = 'hi'
-    print('‣ input: ',text)
-    full_response = ag.send_utterance(text)
+    # text = 'hi'
+    # print('‣ input: ',text)
+    # full_response = ag.send_utterance(text)
 
 
-    text = 'benjamin'
-    print('‣ input: ',text)
-    full_response = ag.send_utterance(text)
-    # myobj = gTTS(text=full_response, lang=language, slow=False)
+    # text = 'benjamin'
+    # print('‣ input: ',text)
+    # full_response = ag.send_utterance(text)
+    # # myobj = gTTS(text=full_response, lang=language, slow=False)
 
-    # myobj.save("temp.mp3")
+    # # myobj.save("temp.mp3")
 
-    # playsound("temp.mp3")
+    # # playsound("temp.mp3")
 
-    text = 'lucy'
-    print('‣ input: ',text)
-    full_response = ag.send_utterance(text)
-    text = 'bear'
-    print('‣ input: ',text)
-    full_response = ag.send_utterance(text)
-    text = 'Hi'
-    print('‣ input: ',text)
-    full_response = ag.send_utterance(text)
+    # text = 'lucy'
+    # print('‣ input: ',text)
+    # full_response = ag.send_utterance(text)
+    # text = 'bear'
+    # print('‣ input: ',text)
+    # full_response = ag.send_utterance(text)
+    # text = 'Hi'
+    # print('‣ input: ',text)
+    # full_response = ag.send_utterance(text)
 
 
     
