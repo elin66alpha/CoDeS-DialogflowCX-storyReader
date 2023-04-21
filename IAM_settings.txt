@@ -1,0 +1,4 @@
+1. create the service account under the tab service account in google cloud
+2. copy the service account email, click grant access under IAM tab
+3. paste the email to the "new principles", select the role as owner
+4. go back to service account tab, click on the account, click the key tab, generate key as json
