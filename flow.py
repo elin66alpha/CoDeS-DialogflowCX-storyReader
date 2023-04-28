@@ -11,7 +11,7 @@ from google.oauth2.service_account import Credentials
 import pyaudio
 import wave
 from gtts import gTTS
-import playsound
+import winplaysound
 
 
 class flow:
@@ -22,9 +22,25 @@ class flow:
     audio_filename = ''
     book = ''
     read = ''
+    user_name = ''
     question = 0
     answer = 0
     block_signal = False
+    seconds = 4
+    key_exist = False
+
+
+    def update_name_time(self,name,second):
+        self.user_name = name
+        if(second != ''):
+            if(int(second) > 10):
+                self.seconds = 10
+            elif(int(second) < 1):
+                self.seconds = 4
+            else:
+                self.seconds = int(second)
+        else:
+            self.seconds = 4
 
     def setBook_Read(self,book,read):
         self.block_signal = False
@@ -37,11 +53,20 @@ class flow:
     def init(self):
         try:
             os.mkdir('human_voice_input')
+        except:
+            pass
+        try:
             os.mkdir('computer_voice_output')
         except:
             pass
         if(self.book == 'picnic'):
-            self.Credential = Credentials.from_service_account_file("picnic_key.json")
+            try:
+                self.Credential = Credentials.from_service_account_file("keys/picnic_key.json")
+            except:
+                print("no key found")
+                self.key_exist = False
+                return
+            self.key_exist = True
             project_id = "final-picnic-with-some-peanuts"
             if(self.read == 1):
                 agent_id = "0dd93541-aa75-4457-a5c8-fd04474140fe"
@@ -50,7 +75,13 @@ class flow:
             elif(self.read == 3):
                 agent_id = "ae1a91bb-a38a-4d45-827a-530e44910c0c"
         elif(self.book == 'maria'):
-            self.Credential = Credentials.from_service_account_file("maria_key.json")
+            try:
+                self.Credential = Credentials.from_service_account_file("keys/maria_key.json")
+            except:
+                print("no key found")
+                self.key_exist = False
+                return
+            self.key_exist = True
             project_id = "final-marias-perfect-day"
             if(self.read == 1):
                 agent_id = "db2a4961-593c-4b46-9237-a406ba48946b"
@@ -59,7 +90,13 @@ class flow:
             elif(self.read == 3):
                 agent_id = "1ffea9ee-aba0-4ffd-985a-45248a0a0223"
         elif(self.book == 'yilin'):
-            self.Credential = Credentials.from_service_account_file("yilin_key.json")
+            try:
+                self.Credential = Credentials.from_service_account_file("keys/yilin_key.json")
+            except:
+                print("no key found")
+                self.key_exist = False
+                return
+            self.key_exist = True
             project_id = "yilin-test-379200"
             agent_id = "d37bd253-e6ab-4041-9442-f31c8f952524"
         
@@ -68,17 +105,21 @@ class flow:
 
 
     def send_audio(self, text):
-
-        message = self.detect_intent_audio(text)
-        language = 'en'
-        myobj = gTTS(text=message, lang=language, slow=False)
-        self.question += 1
-        out_dir = f'computer_voice_output/feedback-{self.book}{self.read}-{self.question}.mp3'
-        myobj.save(out_dir)
-        self.block_signal = True
-        playsound.playsound(out_dir)
-        self.block_signal = False
-
+        if (self.check_init()):
+            message = self.detect_intent_audio(text)
+            if(message != ''):
+                language = 'en'
+                myobj = gTTS(text=message, lang=language, slow=False)
+                self.question += 1
+                out_dir = f'computer_voice_output/feedback,{self.book}{self.read},{self.user_name}{self.question}.mp3'
+                myobj.save(out_dir)
+                self.block_signal = True
+                winplaysound.playsound(out_dir)
+                self.block_signal = False
+            else:
+                print("no message received")
+        else:
+            print("can't send your request, please select a book and readding! or check your internet connection and key file")
 
     def detect_intent_audio(self,text):
         """Returns the result of detect intent with an audio file as input.
@@ -125,9 +166,8 @@ class flow:
         sample_format = pyaudio.paInt16  # 16 bits per sample
         channels = 1
         fs = 24000 # Record at 44100 samples per second
-        seconds = 4
         self.answer += 1
-        filename = f'human_voice_input/record-{self.book}{self.read}-{self.answer}.wav'
+        filename = f'human_voice_input/record,{self.book}{self.read},{self.user_name}{self.answer}.wav'
         self.audio_filename = filename
         p = pyaudio.PyAudio()  # Create an interface to PortAudio
 
@@ -142,7 +182,7 @@ class flow:
         frames = []  # Initialize array to store frames
 
         # Store data in chunks for 3 seconds
-        for i in range(0, int(fs / chunk * seconds)):
+        for i in range(0, int(fs / chunk * self.seconds)):
             data = stream.read(chunk)
             frames.append(data)
 
@@ -160,18 +200,25 @@ class flow:
         wf.writeframes(b''.join(frames))
         wf.close()
         self.send_audio(None)
+    
+    def check_init(self):
+        complete_init_flag = False
+        if(self.book != '' and self.read != '' and self.block_signal == False and self.key_exist == True):
+            complete_init_flag = True
+        return complete_init_flag
 
 
-# example of manual test
-if __name__ == '__main__':
-    flow = flow() # create a flow object
 
-    # set the book and read
-    flow.setBook_Read('yilin',3) 
-    flow.send_audio('hello')
-    #switch to another book
-    flow.setBook_Read('picnic',2)
-    flow.send_audio('hello')
-    #switch to another book
-    flow.setBook_Read('maria',1)
-    flow.send_audio('hello')
+# # example of manual test
+# if __name__ == '__main__':
+#     flow = flow() # create a flow object
+
+#     # set the book and read
+#     flow.setBook_Read('yilin',3) 
+#     flow.send_audio('hello')
+#     #switch to another book
+#     flow.setBook_Read('picnic',2)
+#     flow.send_audio('hello')
+#     #switch to another book
+#     flow.setBook_Read('maria',1)
+#     flow.send_audio('hello')

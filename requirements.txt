@@ -1,6 +1,5 @@
 PyQT5
 PyQt5-tools
 google-cloud-dialogflow-cx 
-gtts 
-playsound 
+gtts  
 pyaudio
