@@ -1,5 +1,5 @@
 import sys
-from PyQt5.QtWidgets import QApplication, QWidget, QHBoxLayout, QVBoxLayout, QLabel, QPushButton, QSizePolicy,QLineEdit
+from PyQt5.QtWidgets import QApplication, QWidget, QHBoxLayout, QVBoxLayout, QLabel, QPushButton, QSizePolicy,QLineEdit,QCheckBox
 from PyQt5.QtGui import QFont, QPalette, QColor, QBrush, QPainter, QPen,QIcon
 from PyQt5.QtCore import Qt
 from flow import flow
@@ -112,11 +112,20 @@ class MyWidget(QWidget):
         button.setStyleSheet("QPushButton { background-color: #FFFFFF; border-radius: 20px; border: 4px outset silver; color: black; font: 19px;}"
                                 "QPushButton:hover { background-color: #ffffff; }"
                                 "QPushButton:pressed { background-color: #999; }")
-        button.clicked.connect(lambda: self.flow.setBook_Read('yilin', 0))
+        button.clicked.connect(lambda: self.flow.setBook_Read('train', 0))
 
         middle_layout.addWidget(button)
         # middle_layout.addStretch()
-
+        #add a checkbox for NQ_flag
+        NQ_checkbox = QCheckBox("NQ mode")
+        NQ_checkbox.setStyleSheet("QCheckBox { background-color: #FFFFFF; border-radius: 20px; border: 4px outset silver; color: black; font: 19px;}"
+                                "QCheckBox:hover { background-color: #ffffff; }"
+                                "QCheckBox:pressed { background-color: #999; }")
+        
+        NQ_checkbox.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
+        
+        NQ_checkbox.stateChanged.connect(lambda: self.flow.setNQ(NQ_checkbox.isChecked()))
+        middle_layout.addWidget(NQ_checkbox)
 
 
         right_layout = QVBoxLayout()
